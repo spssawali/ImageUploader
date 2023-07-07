@@ -1,0 +1,30 @@
+﻿@model List<Image>
+@{
+    ViewData["Title"] = "Image";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between">
+        <h3>Image</h3>
+       
+    <div class="d-flex align-content-center">
+        <a href="~/home?sessionId=@ViewBag.SessionId" class="btn btn-primary">Add Image</a>
+        <a href="~/home/AllImages?sessionId=@ViewBag.SessionId" class="btn btn-primary ms-1">View AllImage</a>
+    </div>
+</div>
+<main class="main">
+    <div class="container">
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-image">
+                    <a href="@Url.Content("~/uploads/"+@item.ImageName)" data-fancybox="gallery" data-caption="@item.ImageName">
+                        <img src="@Url.Content("~/uploads/"+@item.ImageName)" alt="Image Gallery">
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+

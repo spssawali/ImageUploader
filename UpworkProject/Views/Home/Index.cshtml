@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="d-flex justify-content-between">
+    <h3>Upload Image</h3>
+    <div class="d-flex align-content-center">
+        <a href="~/home/Images?sessionId=@ViewBag.SessionId" class="btn btn-primary">View Image</a>
+        <a href="~/home/AllImages?sessionId=@ViewBag.SessionId" class="btn btn-primary ms-1">View AllImage</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 ">
+
+            <div class="form-group mb-3">
+                <label for="file">Select a image:</label>
+                <input type="file" name="file" id="fileImg" class="form-control" />
+                <input type="hidden" name="sessionId" id="sessionId" value="@ViewBag.SessionId" />
+            </div>
+            <button type="submit" onclick="fileUpoad()" class="btn btn-primary">Upload</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const apiUrl = "Home/uploadImage";
+    function fileUpoad() {
+        let fileInput = document.getElementById("fileImg");
+        let sessionId = document.getElementById("sessionId");
+        const file = fileInput.files[0];
+
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("sessionId", sessionId.value);
+
+            fetch(apiUrl, {
+                method: "POST",
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("File uploaded successfully!");
+                        Swal.fire(
+                            'Good job!',
+                            'File uploaded successfully!',
+                            'success'
+                        ).then((result) => {
+                            window.location = "/home/images?sessionId=" + sessionId.value;
+                        })
+                    } else {
+                        response.json().then(result => {
+                            console.error("Error uploading the file. StatusCode: " + response.status);
+                            Swal.fire(
+                                'Error',
+                                result.message,
+                                'error'
+                            )
+                        })
+                    }
+                })
+                .catch(error => {
+                    response.json().then(result => {
+                        console.error("Error uploading the file. StatusCode: " + response.status);
+                        Swal.fire(
+                            'Error',
+                            result.message,
+                            'error'
+                        )
+                    })
+                });
+        }
+
+
+    }
+</script>
